@@ -1,0 +1,3 @@
+import {URL,KEY} from './cms-config.js';
+export async function request(path,{method='GET',body,token,headers={}}={}){const r=await fetch(URL+path,{method,headers:{apikey:KEY,...(token?{Authorization:'Bearer '+token}:{}),...(body && !(body instanceof File)?{'Content-Type':'application/json'}:{}),...headers},body:body instanceof File?body:body?JSON.stringify(body):undefined});const text=await r.text();let data;try{data=text?JSON.parse(text):null}catch{data=null}if(!r.ok)throw new Error(data?.msg||data?.message||data?.error_description||'Request failed ('+r.status+')');return data;}
+export function safeURL(value){try{const u=new globalThis.URL(value);return u.protocol==='https:'?u.href:''}catch{return ''}}
